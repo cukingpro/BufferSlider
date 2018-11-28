@@ -27,7 +27,7 @@ public enum VerticalPosition:Int{
 /// - 0.1 ~ 1.0
 /// - *@IBInspectable* property *borderColor* (*UIKit.UIColor*)
 /// - *@IBInspectable* property *fillColor* (*UIKit.UIColor*)
-/// - *@IBInspectable* property *borderWidth* (*Swift.Double*)
+/// - *@IBInspectable* property *sliderBorderWidth* (*Swift.Double*)
 /// - *@IBInspectable* property *sliderHeight* (*Swift.Double*)
 @IBDesignable open class BufferSlider: UISlider {
     ///0.0 ~ 1.0. @IBInspectable
@@ -65,10 +65,10 @@ public enum VerticalPosition:Int{
     @IBInspectable open var bufferColor:UIColor? = nil
 
     ///BorderWidth property. @IBInspectable
-    @IBInspectable open var borderWidth: Double = 0.5{
+    @IBInspectable open var sliderBorderWidth: Double = 0.5{
         didSet{
-            if borderWidth < 0.1 {
-                borderWidth = 0.1
+            if sliderBorderWidth < 0.1 {
+                sliderBorderWidth = 0.1
             }
             self.setNeedsDisplay()
         }
@@ -125,7 +125,7 @@ public enum VerticalPosition:Int{
 //        UIColor.redColor().colorWithAlphaComponent(0.3).set()
 //        UIRectFrame(rect)
         baseColor.set()
-        let rect = self.bounds.insetBy(dx: CGFloat(borderWidth)+padding, dy: CGFloat(borderWidth))
+        let rect = self.bounds.insetBy(dx: CGFloat(sliderBorderWidth)+padding, dy: CGFloat(sliderBorderWidth))
         let height = sliderHeight.CGFloatValue
         let radius = height/2
         var sliderRect = CGRect(x: rect.origin.x, y: rect.origin.y + (rect.height/2-radius), width: rect.width, height: rect.width) //default center
@@ -140,9 +140,9 @@ public enum VerticalPosition:Int{
 
         let path = UIBezierPath()
         if roundedSlider {
-            path.addArc(withCenter: CGPoint(x: sliderRect.minX + radius, y: sliderRect.minY+radius), radius: radius, startAngle: CGFloat(M_PI)/2, endAngle: -CGFloat(M_PI)/2, clockwise: true)
+            path.addArc(withCenter: CGPoint(x: sliderRect.minX + radius, y: sliderRect.minY+radius), radius: radius, startAngle: CGFloat.pi/2, endAngle: -CGFloat.pi/2, clockwise: true)
             path.addLine(to: CGPoint(x: sliderRect.maxX-radius, y: sliderRect.minY))
-            path.addArc(withCenter: CGPoint(x: sliderRect.maxX-radius, y: sliderRect.minY+radius), radius: radius, startAngle: -CGFloat(M_PI)/2, endAngle: CGFloat(M_PI)/2, clockwise: true)
+            path.addArc(withCenter: CGPoint(x: sliderRect.maxX-radius, y: sliderRect.minY+radius), radius: radius, startAngle: -CGFloat.pi/2, endAngle: CGFloat.pi/2, clockwise: true)
             path.addLine(to: CGPoint(x: sliderRect.minX + radius, y: sliderRect.minY+height))
         }else{
             path.move(to: CGPoint(x: sliderRect.minX, y: sliderRect.minY+height))
@@ -153,19 +153,19 @@ public enum VerticalPosition:Int{
         }
 
         baseColor.setStroke()
-        path.lineWidth = borderWidth.CGFloatValue
+        path.lineWidth = sliderBorderWidth.CGFloatValue
         path.stroke()
         if !hollow { path.fill() }
         path.addClip()
         
-        var fillHeight = sliderRect.size.height-borderWidth.CGFloatValue
+        var fillHeight = sliderRect.size.height-sliderBorderWidth.CGFloatValue
         if fillHeight < 0 {
             fillHeight = 0
         }
         
         let fillRect = CGRect(
             x: sliderRect.origin.x + sliderRect.size.width*CGFloat(bufferStartValue),
-            y: sliderRect.origin.y + borderWidth.CGFloatValue/2,
+            y: sliderRect.origin.y + sliderBorderWidth.CGFloatValue/2,
             width: sliderRect.size.width*CGFloat(bufferEndValue-bufferStartValue),
             height: fillHeight)
         if let color = bufferColor { color.setFill() }
@@ -179,7 +179,7 @@ public enum VerticalPosition:Int{
             color.setFill()
             let fillRect = CGRect(
                 x: sliderRect.origin.x,
-                y: sliderRect.origin.y + borderWidth.CGFloatValue/2,
+                y: sliderRect.origin.y + sliderBorderWidth.CGFloatValue/2,
                 width: sliderRect.size.width*CGFloat((value-minimumValue)/(maximumValue-minimumValue)),
                 height: fillHeight)
             UIBezierPath(rect: fillRect).fill()
